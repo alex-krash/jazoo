@@ -1,8 +1,12 @@
 package dev.vbabaev.tools.jazoo.command;
 
+import dev.vbabaev.tools.jazoo.ConnectionPool;
 import dev.vbabaev.tools.jazoo.PathResolver;
-import dev.vbabaev.tools.jazoo.ZooKeeperConnection;
+import dev.vbabaev.tools.jazoo.ZooKeeperConnection2;
+import dev.vbabaev.tools.jazoo.ZooKeeperPoolable;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooDefs;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -10,11 +14,11 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class CommandTouch {
 
-    private ZooKeeperConnection connection;
+    private ConnectionPool pool;
     private PathResolver resolver;
 
-    public CommandTouch(ZooKeeperConnection connection, PathResolver resolver) {
-        this.connection = connection;
+    public CommandTouch(ConnectionPool pool, PathResolver resolver) {
+        this.pool = pool;
         this.resolver = resolver;
     }
 
@@ -24,6 +28,14 @@ public class CommandTouch {
             @ShellOption(value = {"-s", "--sequential"}, arity = 0, defaultValue = "false") boolean sequential,
             @ShellOption(value = "") String path
     ) throws KeeperException, InterruptedException {
-        this.connection.touch(resolver.resolve(path), ephemeral, sequential);
+        try (ZooKeeperPoolable connection = pool.getConnection()) {
+            final CreateMode mode;
+            if (ephemeral) {
+                mode = sequential ? CreateMode.EPHEMERAL_SEQUENTIAL : CreateMode.EPHEMERAL;
+            } else {
+                mode = sequential ? CreateMode.PERSISTENT_SEQUENTIAL : CreateMode.PERSISTENT;
+            }
+            connection.create(path, new byte[]{}, ZooDefs.Ids.OPEN_ACL_UNSAFE, mode);
+        }
     }
 }

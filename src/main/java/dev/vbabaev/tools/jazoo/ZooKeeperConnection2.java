@@ -1,5 +1,7 @@
 package dev.vbabaev.tools.jazoo;
 
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
@@ -18,13 +20,13 @@ import java.util.List;
 
 @Service
 @Scope("singleton")
-public class ZooKeeperConnection {
+public class ZooKeeperConnection2 {
 
     private final SimpleDateFormat formatter_ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private final ZooKeeper keeper;
 
-    public ZooKeeperConnection(@Value("${server:localhost}") String server, @Value("${timeout:10000}") int timeout) throws IOException {
+    public ZooKeeperConnection2(@Value("${server:localhost}") String server, @Value("${timeout:10000}") int timeout) throws IOException {
         System.out.println("Zookeeper server:" + server);
         System.out.println("Zookeeper connection timeout:" + timeout);
         this.keeper = new ZooKeeper(server, timeout, (a) -> {
@@ -35,6 +37,7 @@ public class ZooKeeperConnection {
         } catch (Exception e) {
             throw new RuntimeException("Cannot connect to " + server);
         }
+
     }
 
     public void touch(final String path, boolean ephemeral, boolean sequential) throws KeeperException, InterruptedException {

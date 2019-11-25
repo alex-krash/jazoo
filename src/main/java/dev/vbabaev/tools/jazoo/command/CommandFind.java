@@ -1,7 +1,7 @@
 package dev.vbabaev.tools.jazoo.command;
 
 import dev.vbabaev.tools.jazoo.PathResolver;
-import dev.vbabaev.tools.jazoo.ZooKeeperConnection;
+import dev.vbabaev.tools.jazoo.ZooKeeperConnection2;
 import org.apache.zookeeper.KeeperException;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -20,10 +20,10 @@ public class CommandFind {
         f
     }
 
-    private ZooKeeperConnection connection;
+    private ZooKeeperConnection2 connection;
     private PathResolver resolver;
 
-    public CommandFind(ZooKeeperConnection connection, PathResolver resolver) {
+    public CommandFind(ZooKeeperConnection2 connection, PathResolver resolver) {
         this.connection = connection;
         this.resolver = resolver;
     }

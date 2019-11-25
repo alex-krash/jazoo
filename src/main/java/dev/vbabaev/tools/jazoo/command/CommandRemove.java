@@ -1,7 +1,7 @@
 package dev.vbabaev.tools.jazoo.command;
 
 import dev.vbabaev.tools.jazoo.PathResolver;
-import dev.vbabaev.tools.jazoo.ZooKeeperConnection;
+import dev.vbabaev.tools.jazoo.ZooKeeperConnection2;
 import org.apache.zookeeper.KeeperException;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -12,9 +12,9 @@ import java.util.List;
 @ShellComponent
 public class CommandRemove {
     private PathResolver resolver;
-    private ZooKeeperConnection connection;
+    private ZooKeeperConnection2 connection;
 
-    public CommandRemove(ZooKeeperConnection connection, PathResolver resolver) {
+    public CommandRemove(ZooKeeperConnection2 connection, PathResolver resolver) {
         this.connection = connection;
         this.resolver = resolver;
     }
